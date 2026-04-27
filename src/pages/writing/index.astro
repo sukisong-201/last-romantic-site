@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+const all = await getCollection('posts', ({ data }) => data.status === 'published');
+const sorted = all.sort((a, b) =>
+  b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+---
+
+<BaseLayout title="Writing" description="Every piece, in order.">
+  <section class="container">
+    <header class="page__header">
+      <p class="kicker">The archive</p>
+      <h1>Writing</h1>
+      <p class="lede">Every piece, in reverse chronological order.</p>
+    </header>
+    <div class="list">
+      {sorted.length === 0 && <p class="empty">No posts yet.</p>}
+      {sorted.map(p => (
+        <PostCard
+          href={`/p/${p.id.replace(/\.mdx?$/, '')}`}
+          title={p.data.title}
+          subtitle={p.data.subtitle}
+          series={p.data.series}
+          publishedAt={p.data.publishedAt}
+          wordcount={p.data.wordcount}
+          coverImage={p.data.coverImage}
+          coverAlt={p.data.coverAlt}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page__header { padding: var(--s-16) 0 var(--s-8); max-width: var(--measure); }
+  .lede { font-style: italic; color: var(--ink-soft); font-size: var(--fs-lead); }
+  .list { padding-bottom: var(--s-16); }
+  .empty { color: var(--smoke); font-style: italic; }
+</style>

@@ -1,0 +1,5 @@
+{
+  "_comment": "Manual series classifications. Default rules: bourdainism-* → bourdainism; *four-cs* → four-cs; title contains 'Memoir' → memoir; else → essays. Add overrides below to promote specific posts (e.g. Marriage 1 chapters) into Memoir.",
+  "vienna-last-night-2025-wrapped": "bourdainism",
+  "read_me-how-to-read-my-substack-and": "four-cs"
+}

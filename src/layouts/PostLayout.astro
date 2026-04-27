@@ -1,0 +1,228 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SeriesBadge from '../components/SeriesBadge.astro';
+import SubscribeEmbed from '../components/SubscribeEmbed.astro';
+
+interface NavLink { slug: string; title: string }
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  series: 'memoir' | 'bourdainism' | 'four-cs' | 'essays' | 'standalone';
+  seriesOrder?: number;
+  publishedAt: Date;
+  substackUrl: string;
+  coverImage?: string;
+  coverAlt?: string;
+  wordcount?: number;
+  description?: string;
+  prev?: NavLink | null;
+  next?: NavLink | null;
+}
+
+const {
+  title,
+  subtitle,
+  series,
+  seriesOrder,
+  publishedAt,
+  substackUrl,
+  coverImage,
+  coverAlt = '',
+  wordcount,
+  description,
+  prev,
+  next,
+} = Astro.props;
+
+const seriesLabels: Record<string, string> = {
+  memoir: 'Memoir', bourdainism: 'Bourdainism', 'four-cs': "The Four C's", essays: 'Essays & Letters', standalone: 'Essay',
+};
+
+const date = publishedAt.toLocaleDateString('en-US', {
+  month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC',
+});
+const minutes = wordcount ? Math.max(1, Math.round(wordcount / 220)) : null;
+---
+
+<BaseLayout title={title} description={description ?? subtitle ?? title} ogImage={coverImage}>
+  <article class="post">
+    <header class="post__header container">
+      <p class="post__kicker">
+        <SeriesBadge series={series} size="sm" />
+        {seriesOrder && <span class="post__num">No. {String(seriesOrder).padStart(2, '0')}</span>}
+        <span class="post__sep">·</span>
+        <time>{date}</time>
+        {minutes && <><span class="post__sep">·</span><span>{minutes} min read</span></>}
+      </p>
+      <h1 class="post__title">{title}</h1>
+      {subtitle && <p class="post__subtitle">{subtitle}</p>}
+    </header>
+
+    {coverImage && (
+      <figure class="post__cover container">
+        <img src={coverImage} alt={coverAlt} />
+      </figure>
+    )}
+
+    <div class="post__body measure">
+      <slot />
+    </div>
+
+    <footer class="post__footer measure">
+      {(prev || next) && (
+        <nav class="post__nav" aria-label={`More in ${seriesLabels[series]}`}>
+          <p class="post__nav-kicker">More in {seriesLabels[series]}</p>
+          <div class="post__nav-grid">
+            {prev ? (
+              <a href={`/p/${prev.slug}`} class="post__nav-link post__nav-link--prev">
+                <span class="post__nav-dir">← Previous</span>
+                <span class="post__nav-title">{prev.title}</span>
+              </a>
+            ) : <span />}
+            {next ? (
+              <a href={`/p/${next.slug}`} class="post__nav-link post__nav-link--next">
+                <span class="post__nav-dir">Next →</span>
+                <span class="post__nav-title">{next.title}</span>
+              </a>
+            ) : <span />}
+          </div>
+        </nav>
+      )}
+      <hr />
+      <div class="post__cta">
+        <a class="post__discuss" href={substackUrl} rel="noopener">
+          Discuss on Substack →
+        </a>
+      </div>
+      <SubscribeEmbed variant="card" />
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .post { padding: var(--s-12) 0 var(--s-16); }
+  .post__header {
+    text-align: left;
+    padding-top: var(--s-8);
+    padding-bottom: var(--s-12);
+    border-bottom: var(--rule-heavy) solid var(--ink);
+    margin-bottom: var(--s-16);
+  }
+  .post__kicker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2);
+    font-family: var(--font-ui);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0 0 var(--s-6);
+  }
+  .post__num { font-variant-numeric: lining-nums; font-weight: 500; }
+  .post__sep { opacity: 0.4; }
+  .post__title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    font-weight: 600;
+    margin: 0 0 var(--s-4);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    max-width: 24ch;
+  }
+  .post__subtitle {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: clamp(1.25rem, 2.5vw, 1.875rem);
+    margin: 0;
+    max-width: 36ch;
+    line-height: 1.25;
+  }
+  .post__cover {
+    margin: 0 auto var(--s-12);
+  }
+  .post__cover img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--ink);
+  }
+  .post__body { padding: 0 var(--s-6); }
+  .post__body :global(p:first-of-type)::first-letter {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 5em;
+    float: left;
+    line-height: 0.85;
+    margin: 0.05em 0.1em 0 -0.04em;
+    color: var(--crimson);
+  }
+  .post__footer { padding: 0 var(--s-6); margin-top: var(--s-12); }
+  .post__cta { text-align: center; margin: var(--s-8) 0; }
+  .post__discuss {
+    display: inline-block;
+    font-family: var(--font-ui);
+    font-size: var(--fs-nav);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 4px;
+    font-weight: 500;
+  }
+  .post__discuss:hover { color: var(--crimson); border-bottom-color: var(--crimson); }
+
+  .post__nav {
+    border-top: var(--rule-heavy) solid var(--ink);
+    padding-top: var(--s-8);
+    margin-top: var(--s-12);
+  }
+  .post__nav-kicker {
+    font-family: var(--font-ui);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0 0 var(--s-4);
+    font-weight: 500;
+  }
+  .post__nav-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-6);
+  }
+  .post__nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    padding: var(--s-4) 0;
+    text-decoration: none;
+    color: var(--ink);
+    border-top: 1px solid var(--ink);
+  }
+  .post__nav-link--next { text-align: right; }
+  .post__nav-dir {
+    font-family: var(--font-ui);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--smoke);
+  }
+  .post__nav-title {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+  }
+  .post__nav-link:hover .post__nav-title { color: var(--crimson); }
+  @media (max-width: 600px) {
+    .post__nav-grid { grid-template-columns: 1fr; }
+    .post__nav-link--next { text-align: left; }
+  }
+</style>

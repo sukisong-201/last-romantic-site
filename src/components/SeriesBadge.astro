@@ -1,0 +1,37 @@
+---
+interface Props {
+  series: 'memoir' | 'bourdainism' | 'four-cs' | 'essays' | 'standalone';
+  size?: 'sm' | 'md';
+}
+const { series, size = 'md' } = Astro.props;
+
+const labels: Record<string, string> = {
+  memoir: 'Memoir',
+  bourdainism: 'Bourdainism',
+  'four-cs': "The Four C's",
+  essays: 'Essays & Letters',
+  standalone: 'Essay',
+};
+---
+
+<span class:list={['badge', `badge--${series}`, `badge--${size}`]}>
+  {labels[series]}
+</span>
+
+<style>
+  .badge {
+    font-family: var(--font-ui);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border-bottom: 2px solid currentColor;
+    padding-bottom: 2px;
+    display: inline-block;
+  }
+  .badge--memoir { color: var(--memoir); }
+  .badge--bourdainism { color: var(--bourdainism); }
+  .badge--four-cs { color: var(--four-cs); }
+  .badge--essays { color: var(--essays); }
+  .badge--sm { font-size: 0.6875rem; }
+</style>

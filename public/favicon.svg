@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#faf7f1"/>
+  <text
+    x="32" y="50"
+    text-anchor="middle"
+    font-family="'Bodoni 72','Bodoni Moda','Didot',Georgia,serif"
+    font-style="italic"
+    font-weight="700"
+    font-size="56"
+    fill="#a8132a"
+    letter-spacing="-2"
+  >T<tspan font-style="normal" fill="#0a0908">.</tspan></text>
+</svg>

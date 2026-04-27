@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const portrait = "https://substackcdn.com/image/fetch/$s_!SMy6!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F16df9931-08ac-422e-a13c-5f67fd1176e6_1290x961.jpeg";
+---
+
+<BaseLayout title="About" description="I'm Suki Song — writer, solo traveler, Tech PM by day, and the Last Romantic by disposition.">
+  <section class="container measure about">
+    <p class="kicker">About</p>
+    <h1 class="about__title">Suki Song.</h1>
+
+    <p class="about__lede">
+      I&rsquo;m Suki Song — writer, solo traveler, Tech PM by day, and the Last Romantic by disposition.
+    </p>
+
+    <p>
+      I write four things here:
+      <strong><a href="/writing/bourdainism">Bourdainism</a></strong>
+      (solo travel essays in the Bourdain tradition — raw, present, cinematic),
+      <strong><a href="/writing/four-cs">The Four C&rsquo;s</a></strong>
+      (a true story from 2020: COVID, a cartel, a con man who took over my startup, and a murder),
+      <strong><a href="/writing/memoir">The Memoir</a></strong>
+      (my life, unfiltered),
+      and <strong><a href="/writing/essays">Essays &amp; Letters</a></strong>
+      (everything else — letters to people I love, healing notes, the work in between).
+      No lifestyle content. No hot takes. Just honest writing about being alive in the world.
+    </p>
+
+    <figure class="about__portrait">
+      <img src={portrait} alt="Suki Song" loading="lazy" />
+    </figure>
+
+    <blockquote class="about__pull">
+      If you want writing that doesn&rsquo;t flinch, you&rsquo;re in the right place.
+    </blockquote>
+
+    <p>
+      My writing is free. But being a Paid Subscriber supports my blueberry, Pokemon and Travel habits.
+    </p>
+
+    <hr />
+
+    <p class="kicker about__elsewhere">Elsewhere</p>
+    <ul class="links">
+      <li><a href="https://champagnesuki.substack.com">Substack — the source</a></li>
+      <li><a href="https://instagram.com/champagnesuki">Instagram, @champagnesuki</a></li>
+      <li><a href="/subscribe">Subscribe to the dispatch</a></li>
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .about { padding: var(--s-16) var(--s-6); }
+  .about__title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 9vw, 7rem);
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin: var(--s-3) 0 var(--s-12);
+  }
+  .about__lede {
+    font-family: var(--font-display);
+    font-size: clamp(1.375rem, 2.5vw, 1.875rem);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: var(--s-8);
+  }
+  .about__portrait {
+    margin: var(--s-12) 0;
+  }
+  .about__portrait img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--ink);
+  }
+  .about__pull {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    color: var(--ink);
+    border-left: 3px solid var(--crimson);
+    line-height: 1.25;
+    margin: var(--s-12) 0;
+    padding: var(--s-3) 0 var(--s-3) var(--s-6);
+  }
+  .about__elsewhere { margin-top: var(--s-12); margin-bottom: var(--s-4); }
+  .links { padding: 0; list-style: none; }
+  .links li { margin-bottom: var(--s-3); font-size: var(--fs-lead); }
+</style>

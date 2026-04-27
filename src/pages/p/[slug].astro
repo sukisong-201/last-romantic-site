@@ -1,0 +1,59 @@
+---
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => data.status === 'published');
+
+  // Build per-series chronological ordering for prev/next.
+  const bySeries = new Map<string, typeof posts>();
+  for (const p of posts) {
+    const list = bySeries.get(p.data.series) ?? [];
+    list.push(p);
+    bySeries.set(p.data.series, list);
+  }
+  for (const [series, list] of bySeries) {
+    list.sort((a, b) => {
+      const oa = a.data.seriesOrder ?? 9999;
+      const ob = b.data.seriesOrder ?? 9999;
+      if (oa !== ob) return oa - ob;
+      return a.data.publishedAt.getTime() - b.data.publishedAt.getTime();
+    });
+    bySeries.set(series, list);
+  }
+
+  return posts.map(post => {
+    const list = bySeries.get(post.data.series) ?? [];
+    const idx = list.findIndex(p => p.id === post.id);
+    const prev = idx > 0 ? list[idx - 1] : null;
+    const next = idx >= 0 && idx < list.length - 1 ? list[idx + 1] : null;
+    return {
+      params: { slug: post.id.replace(/\.mdx?$/, '') },
+      props: {
+        post,
+        prev: prev ? { slug: prev.id.replace(/\.mdx?$/, ''), title: prev.data.title } : null,
+        next: next ? { slug: next.id.replace(/\.mdx?$/, ''), title: next.data.title } : null,
+      },
+    };
+  });
+}
+
+const { post, prev, next } = Astro.props;
+const { Content } = await render(post);
+---
+
+<PostLayout
+  title={post.data.title}
+  subtitle={post.data.subtitle}
+  series={post.data.series}
+  seriesOrder={post.data.seriesOrder}
+  publishedAt={post.data.publishedAt}
+  substackUrl={post.data.substackUrl}
+  coverImage={post.data.coverImage}
+  coverAlt={post.data.coverAlt}
+  wordcount={post.data.wordcount}
+  prev={prev}
+  next={next}
+>
+  <Content />
+</PostLayout>

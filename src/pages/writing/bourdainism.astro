@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+const posts = (await getCollection('posts', ({ data }) =>
+  data.status === 'published' && data.series === 'bourdainism'
+)).sort((a, b) => {
+  const ao = a.data.seriesOrder ?? 9999;
+  const bo = b.data.seriesOrder ?? 9999;
+  if (ao !== bo) return ao - bo;
+  return b.data.publishedAt.getTime() - a.data.publishedAt.getTime();
+});
+---
+
+<BaseLayout title="Bourdainism" description="The Bourdainism series.">
+  <section class="container">
+    <header class="page__head">
+      <p class="kicker">Series</p>
+      <h1 class="page__title">Bourdainism.</h1>
+      <p class="page__count">{posts.length} dispatches</p>
+    </header>
+    <div class="list">
+      {posts.length === 0 && <p class="empty">Posts will land here once the archive is mirrored.</p>}
+      {posts.map(p => (
+        <PostCard
+          href={`/p/${p.id.replace(/\.mdx?$/, '')}`}
+          title={p.data.title}
+          subtitle={p.data.subtitle}
+          series={p.data.series}
+          publishedAt={p.data.publishedAt}
+          wordcount={p.data.wordcount}
+          coverImage={p.data.coverImage}
+          coverAlt={p.data.coverAlt}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page__head {
+    padding: var(--s-16) 0 var(--s-8);
+    border-bottom: var(--rule-heavy) solid var(--ink);
+    margin-bottom: var(--s-4);
+  }
+  .page__title {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 12vw, 9rem);
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin: var(--s-3) 0;
+    color: var(--bourdainism);
+  }
+  .page__count {
+    font-family: var(--font-ui);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0;
+    font-variant-numeric: lining-nums;
+  }
+  .list { padding-bottom: var(--s-16); }
+  .empty { color: var(--smoke); font-style: italic; }
+</style>

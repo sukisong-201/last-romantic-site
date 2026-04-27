@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Wrong door" description="The page you wanted isn't here.">
+  <section class="container measure not-found">
+    <p class="kicker">404</p>
+    <h1 class="not-found__title">Wrong door.</h1>
+    <p class="not-found__lede">
+      The page you were looking for has either moved, been deleted, or never existed.
+      Possibly all three.
+    </p>
+    <div class="not-found__cta">
+      <a href="/" class="btn">← Take me home</a>
+      <a href="/writing" class="btn btn--ghost">Browse the writing</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding: var(--s-24) var(--s-6);
+    text-align: center;
+  }
+  .not-found .kicker {
+    color: var(--crimson);
+    text-align: center;
+    margin-bottom: var(--s-6);
+  }
+  .not-found__title {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 12vw, 8rem);
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin: 0 0 var(--s-6);
+  }
+  .not-found__lede {
+    font-style: italic;
+    font-size: var(--fs-lead);
+    color: var(--ink-soft);
+    max-width: 32rem;
+    margin: 0 auto var(--s-12);
+  }
+  .not-found__cta {
+    display: flex;
+    gap: var(--s-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: var(--font-ui);
+    font-size: var(--fs-nav);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--ink);
+    padding: var(--s-4) var(--s-6);
+    border: 2px solid var(--ink);
+    text-decoration: none;
+    transition: background 150ms;
+  }
+  .btn:hover { background: var(--crimson); border-color: var(--crimson); }
+  .btn--ghost {
+    background: transparent;
+    color: var(--ink);
+  }
+  .btn--ghost:hover { color: var(--paper); }
+</style>

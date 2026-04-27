@@ -1,0 +1,52 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <span class="footer__wordmark">The Last Romantic</span>
+      <span class="footer__by">by Suki Song</span>
+    </div>
+    <ul class="footer__links">
+      <li><a href="/writing">Writing</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/subscribe">Subscribe</a></li>
+      <li><a href="https://champagnesuki.substack.com" rel="me noopener">Substack</a></li>
+      <li><a href="https://instagram.com/champagnesuki" rel="me noopener">Instagram</a></li>
+    </ul>
+    <p class="footer__legal">© {year} Suki Song. All rights reserved.</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: var(--rule-width) solid var(--rule);
+    margin-top: var(--s-24);
+    padding: var(--s-12) 0 var(--s-8);
+    font-family: var(--font-ui);
+    font-size: var(--fs-caption);
+    color: var(--smoke);
+  }
+  .footer__inner { display: grid; gap: var(--s-6); }
+  .footer__brand { display: flex; gap: var(--s-3); align-items: baseline; flex-wrap: wrap; }
+  .footer__wordmark {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-variation-settings: 'SOFT' 100, 'opsz' 144;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .footer__by { font-style: italic; }
+  .footer__links {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-wrap: wrap; gap: var(--s-4);
+  }
+  .footer__links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--rule);
+  }
+  .footer__links a:hover { color: var(--blood); border-bottom-color: var(--blood); }
+  .footer__legal { margin: 0; }
+</style>

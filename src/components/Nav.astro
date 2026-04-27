@@ -1,0 +1,94 @@
+---
+const links = [
+  { href: '/writing/memoir', label: 'Memoir' },
+  { href: '/writing/bourdainism', label: 'Bourdainism' },
+  { href: '/writing/four-cs', label: "Four C's" },
+  { href: '/writing/essays', label: 'Essays' },
+  { href: '/about', label: 'About' },
+  { href: '/subscribe', label: 'Subscribe' },
+];
+const path = Astro.url.pathname;
+---
+
+<nav class="nav">
+  <div class="container nav__inner">
+    <a href="/" class="nav__wordmark">
+      <span class="nav__article">The</span>
+      <span class="nav__name">Last Romantic</span>
+    </a>
+    <ul class="nav__links">
+      {links.map(({ href, label }) => (
+        <li>
+          <a href={href} class:list={[{ 'is-active': path.startsWith(href) }]}>{label}</a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .nav {
+    border-bottom: var(--rule-heavy) solid var(--ink);
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--s-3);
+    padding-bottom: var(--s-3);
+    gap: var(--s-8);
+  }
+  .nav__wordmark {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    display: flex;
+    align-items: baseline;
+    gap: 0.3em;
+  }
+  .nav__article {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+  .nav__name {
+    font-size: 1.5rem;
+  }
+  .nav__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--s-6);
+    flex-wrap: wrap;
+    font-family: var(--font-ui);
+    font-size: var(--fs-nav);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .nav__links a {
+    color: var(--ink);
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 120ms;
+  }
+  .nav__links a:hover { border-bottom-color: var(--crimson); }
+  .nav__links a.is-active { border-bottom-color: var(--crimson); }
+
+  @media (max-width: 720px) {
+    .nav__inner { flex-direction: column; align-items: flex-start; gap: var(--s-3); }
+    .nav__name { font-size: 1.25rem; }
+    .nav__links { gap: var(--s-4); font-size: 0.6875rem; }
+  }
+</style>

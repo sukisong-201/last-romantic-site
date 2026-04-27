@@ -1,0 +1,396 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SubscribeEmbed from '../components/SubscribeEmbed.astro';
+
+type SeriesKey = 'memoir' | 'bourdainism' | 'four-cs' | 'essays';
+
+const all = await getCollection('posts', ({ data }) => data.status === 'published');
+const sorted = all.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+const seriesMeta: Array<{
+  slug: SeriesKey;
+  title: string;
+  archiveHref: string;
+  blurb: string;
+}> = [
+  {
+    slug: 'memoir',
+    title: 'The Memoir',
+    archiveHref: '/writing/memoir',
+    blurb: 'My life, unfiltered.',
+  },
+  {
+    slug: 'bourdainism',
+    title: 'Bourdainism',
+    archiveHref: '/writing/bourdainism',
+    blurb: 'Solo travel essays in the Bourdain tradition — raw, present, cinematic.',
+  },
+  {
+    slug: 'four-cs',
+    title: "The Four C’s",
+    archiveHref: '/writing/four-cs',
+    blurb: 'A true story from 2020: COVID, a cartel, a con man who took over my startup, and a murder.',
+  },
+  {
+    slug: 'essays',
+    title: 'Essays & Letters',
+    archiveHref: '/writing/essays',
+    blurb: 'Everything else — letters to people I love, healing notes, the work in between.',
+  },
+];
+
+const seriesBlocks = seriesMeta.map(meta => {
+  const inSeries = sorted.filter(p => p.data.series === meta.slug);
+  const latest = inSeries[0];
+  return {
+    ...meta,
+    count: inSeries.length,
+    latest,
+    latestHref: latest ? `/p/${latest.id.replace(/\.mdx?$/, '')}` : null,
+  };
+});
+
+const issueNumber = String(all.length).padStart(2, '0');
+const today = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+const portrait = "https://substackcdn.com/image/fetch/$s_!SMy6!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F16df9931-08ac-422e-a13c-5f67fd1176e6_1290x961.jpeg";
+---
+
+<BaseLayout title="The Last Romantic" description="Memoir, travel, and the four C's. By Suki Song.">
+  <section class="masthead container">
+    <div class="masthead__bar">
+      <span>Issue No. {issueNumber}</span>
+      <span class="masthead__sep">·</span>
+      <span>{today}</span>
+      <span class="masthead__sep">·</span>
+      <span>By Suki Song</span>
+    </div>
+    <h1 class="masthead__title">
+      <span class="masthead__article">The</span>
+      <span class="masthead__name">Last Romantic.</span>
+    </h1>
+    <p class="masthead__tagline">
+      Memoir, travel, and the four C&rsquo;s. <em>No lifestyle content. No hot takes.</em>
+      Just honest writing about being alive in the world.
+    </p>
+  </section>
+
+  <hr class="container" />
+
+  <section class="container">
+    <p class="section__kicker">Meet the writer</p>
+    <div class="meet">
+      <a href="/about" class="meet__portrait" tabindex="-1" aria-hidden="true">
+        <img src={portrait} alt="Suki Song" loading="lazy" />
+      </a>
+      <div class="meet__text">
+        <p class="meet__lede">
+          I&rsquo;m Suki Song — writer, solo traveler, Tech PM by day, and the Last Romantic by disposition.
+          I write four things here: <em>The Memoir</em>, <em>Bourdainism</em>, <em>The Four C&rsquo;s</em>, and <em>Essays &amp; Letters</em>.
+        </p>
+        <p class="meet__pull">
+          <em>If you want writing that doesn&rsquo;t flinch, you&rsquo;re in the right place.</em>
+        </p>
+        <a href="/about" class="meet__more">More about me →</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="container" />
+
+  <section class="container">
+    <p class="section__kicker">Browse the writing</p>
+    <div class="series-overview">
+      {seriesBlocks.map(s => (
+        <article class:list={['series-block', `series-block--${s.slug}`]}>
+          <div class="series-block__head">
+            <h2 class:list={['series-block__name', `series-block__name--${s.slug}`]}>{s.title}</h2>
+            <p class="series-block__meta">{s.count} {s.count === 1 ? 'dispatch' : 'dispatches'}</p>
+            <p class="series-block__blurb">{s.blurb}</p>
+            <a href={s.archiveHref} class="series-block__browse">Browse all →</a>
+          </div>
+          {s.latest && s.latestHref && (
+            <a href={s.latestHref} class="series-block__card">
+              {s.latest.data.coverImage && (
+                <span class="series-block__media">
+                  <img src={s.latest.data.coverImage} alt={s.latest.data.coverAlt ?? ''} loading="lazy" />
+                </span>
+              )}
+              <span class="series-block__card-text">
+                <span class="series-block__card-kicker">Latest dispatch</span>
+                <span class="series-block__card-title">{s.latest.data.title}</span>
+                {s.latest.data.subtitle && (
+                  <span class="series-block__card-subtitle">{s.latest.data.subtitle}</span>
+                )}
+                <span class="series-block__card-cta">Read →</span>
+              </span>
+            </a>
+          )}
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <hr class="container" />
+
+  <div class="container measure">
+    <SubscribeEmbed variant="card" />
+  </div>
+</BaseLayout>
+
+<style>
+  /* ---------- Masthead ---------- */
+  .masthead {
+    padding: var(--s-12) var(--s-6) var(--s-8);
+    text-align: center;
+  }
+  .masthead__bar {
+    font-family: var(--font-ui);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--s-2);
+    padding: 0 0 var(--s-3);
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: var(--s-6);
+  }
+  .masthead__sep { opacity: 0.4; }
+  .masthead__title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    margin: 0 0 var(--s-6);
+    color: var(--ink);
+  }
+  .masthead__article {
+    display: block;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    color: var(--ink-soft);
+    margin-bottom: -0.05em;
+  }
+  .masthead__name {
+    display: block;
+    font-size: clamp(3rem, 9vw, 7rem);
+    font-weight: 600;
+  }
+  .masthead__tagline {
+    font-family: var(--font-display);
+    font-size: clamp(1.0625rem, 1.7vw, 1.375rem);
+    font-style: italic;
+    color: var(--ink-soft);
+    max-width: 38rem;
+    margin: 0 auto;
+    line-height: 1.4;
+  }
+  .masthead__tagline em { font-style: normal; color: var(--ink); }
+
+  /* ---------- Section kicker ---------- */
+  .section__kicker {
+    font-family: var(--font-ui);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: var(--s-3);
+    margin: var(--s-12) 0 var(--s-8);
+    font-weight: 500;
+  }
+
+  /* ---------- Meet ---------- */
+  .meet {
+    display: grid;
+    grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
+    gap: var(--s-12);
+    align-items: start;
+    padding: var(--s-2) 0 var(--s-12);
+  }
+  .meet__portrait {
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--ink);
+  }
+  .meet__portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .meet:hover .meet__portrait img { transform: scale(1.04); }
+  .meet__lede {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.125rem, 1.75vw, 1.5rem);
+    color: var(--ink);
+    margin: 0 0 var(--s-4);
+    line-height: 1.35;
+    max-width: 42ch;
+  }
+  .meet__lede em { font-style: normal; font-weight: 600; color: var(--ink); }
+  .meet__pull {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    color: var(--ink-soft);
+    border-left: 3px solid var(--crimson);
+    padding-left: var(--s-4);
+    margin: var(--s-4) 0 var(--s-6);
+  }
+  .meet__more {
+    display: inline-block;
+    font-family: var(--font-ui);
+    font-size: var(--fs-nav);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 4px;
+    font-weight: 500;
+  }
+  .meet__more:hover { color: var(--crimson); border-bottom-color: var(--crimson); }
+  @media (max-width: 760px) {
+    .meet { grid-template-columns: 1fr; gap: var(--s-6); }
+    .meet__portrait { max-width: 12rem; }
+  }
+
+  /* ---------- Series overview ---------- */
+  .series-overview {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--ink);
+  }
+  .series-block {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: var(--s-12);
+    padding: var(--s-12) 0;
+    border-bottom: 1px solid var(--ink);
+    align-items: start;
+  }
+  @media (max-width: 800px) {
+    .series-block { grid-template-columns: 1fr; gap: var(--s-6); padding: var(--s-8) 0; }
+  }
+  .series-block__head { display: flex; flex-direction: column; gap: var(--s-3); }
+  .series-block__name {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin: 0;
+  }
+  .series-block__name--memoir { color: var(--memoir); }
+  .series-block__name--bourdainism { color: var(--bourdainism); }
+  .series-block__name--four-cs { color: var(--four-cs); }
+  .series-block__name--essays { color: var(--essays); }
+
+  .series-block__meta {
+    font-family: var(--font-ui);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0;
+    font-variant-numeric: lining-nums;
+    font-weight: 500;
+  }
+  .series-block__blurb {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.125rem;
+    color: var(--ink-soft);
+    margin: var(--s-2) 0 var(--s-3);
+    line-height: 1.4;
+    max-width: 32ch;
+  }
+  .series-block__browse {
+    font-family: var(--font-ui);
+    font-size: var(--fs-nav);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 3px;
+    font-weight: 500;
+    align-self: flex-start;
+  }
+  .series-block__browse:hover { color: var(--crimson); border-bottom-color: var(--crimson); }
+
+  /* ---------- Latest card inside a series block ---------- */
+  .series-block__card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: var(--s-6);
+    text-decoration: none;
+    color: var(--ink);
+    align-items: start;
+  }
+  .series-block__media {
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--ink);
+    background: var(--paper-deep);
+  }
+  .series-block__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .series-block__card:hover .series-block__media img { transform: scale(1.04); }
+  .series-block__card-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+  .series-block__card-kicker {
+    font-family: var(--font-ui);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .series-block__card-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 1.8vw, 1.625rem);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+  .series-block__card-subtitle {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+  .series-block__card-cta {
+    font-family: var(--font-ui);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-top: var(--s-2);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 2px;
+    align-self: flex-start;
+  }
+  .series-block__card:hover .series-block__card-cta { color: var(--crimson); border-bottom-color: var(--crimson); }
+  .series-block__card:hover .series-block__card-title { color: var(--crimson); }
+
+  @media (max-width: 600px) {
+    .series-block__card { grid-template-columns: 1fr; }
+    .series-block__media { aspect-ratio: 16 / 10; max-width: 28rem; }
+  }
+</style>

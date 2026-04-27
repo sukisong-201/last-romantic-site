@@ -1,0 +1,62 @@
+/* Design tokens — single source of truth for palette, type, spacing. */
+
+@import '@fontsource-variable/source-serif-4';
+@import '@fontsource-variable/source-serif-4/wght-italic.css';
+@import '@fontsource-variable/bodoni-moda';
+@import '@fontsource-variable/bodoni-moda/wght-italic.css';
+@import '@fontsource-variable/inter';
+
+:root {
+  /* Palette — cleaner ivory, deeper ink, sharper crimson. Less beige. */
+  --paper: #faf7f1;
+  --paper-deep: #f1ebdc;
+  --ink: #0a0908;
+  --ink-soft: #2a2620;
+  --crimson: #a8132a;
+  --gold: #97784e;
+  --smoke: #5a5147;
+  --rule: #2a2620;
+  --rule-soft: #d8cfbb;
+
+  /* Series accents. */
+  --memoir: var(--crimson);
+  --bourdainism: var(--gold);
+  --four-cs: var(--ink-soft);
+  --essays: var(--smoke);
+
+  /* Type families. */
+  --font-body: 'Source Serif 4 Variable', 'Iowan Old Style', Georgia, serif;
+  --font-display: 'Bodoni Moda Variable', 'Bodoni 72', 'Didot', 'Source Serif 4 Variable', Georgia, serif;
+  --font-ui: 'Inter Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Type scale — bigger, more dramatic. */
+  --fs-caption: 0.6875rem;
+  --fs-nav: 0.75rem;
+  --fs-body: 1.1875rem;
+  --fs-lead: 1.4375rem;
+  --fs-h3: 1.75rem;
+  --fs-h2: 2.5rem;
+  --fs-h1: 3.5rem;
+  --fs-display: 8rem;
+
+  --lh-body: 1.6;
+  --lh-tight: 0.95;
+
+  /* Spacing. */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-6: 1.5rem;
+  --s-8: 2rem;
+  --s-12: 3rem;
+  --s-16: 4rem;
+  --s-24: 6rem;
+  --s-32: 8rem;
+
+  /* Layout. */
+  --measure: 38rem;
+  --container: 84rem;
+  --rule-width: 1px;
+  --rule-heavy: 2px;
+}
