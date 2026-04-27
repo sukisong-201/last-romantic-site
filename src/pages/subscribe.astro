@@ -2,17 +2,16 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Subscribe" description="Subscribe to The Last Romantic.">
+<BaseLayout title="Subscribe" description="Subscribe to The Last Romantic — memoir, travel, and the four C's. By Suki Song.">
   <section class="container measure subscribe">
     <p class="kicker">The Dispatch</p>
     <h1 class="subscribe__title">Subscribe.</h1>
 
-    <div class="subscribe__placeholder">
-      <p class="placeholder__note">
-        ✏️ <strong>Suki, write a one-or-two-line pitch here.</strong>
-        What does the reader get? When does it land? What's it not? The voice is the value.
-      </p>
-    </div>
+    <p class="subscribe__pitch">
+      My writing in your inbox — <em>memoir, travel, and the four C&rsquo;s.</em>
+      It lands when I have something to say. No cadence promises. No lifestyle content.
+      No hot takes. Free for now; paid tier comes later, when there&rsquo;s something worth charging for.
+    </p>
 
     <iframe
       src="https://champagnesuki.substack.com/embed"
@@ -42,19 +41,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     letter-spacing: -0.04em;
     margin: var(--s-3) 0 var(--s-8);
   }
-  .subscribe__placeholder {
-    border: 1px dashed var(--ink-soft);
-    padding: var(--s-8);
-    background: var(--paper-deep);
-    margin: var(--s-8) 0;
-  }
-  .placeholder__note {
-    margin: 0;
-    color: var(--ink-soft);
+  .subscribe__pitch {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
     font-style: italic;
-    font-size: 1rem;
-    line-height: 1.5;
+    color: var(--ink);
+    line-height: 1.4;
+    margin: 0 0 var(--s-4);
+    max-width: 38rem;
   }
-  .placeholder__note strong { color: var(--ink); font-style: normal; }
+  .subscribe__pitch em {
+    font-style: normal;
+    font-weight: 600;
+  }
   .fine { font-size: var(--fs-caption); color: var(--smoke); font-family: var(--font-ui); max-width: 36rem; letter-spacing: 0.04em; }
 </style>
